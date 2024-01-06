@@ -84,7 +84,7 @@ class CoinCard extends StatelessWidget {
                       fit: BoxFit.scaleDown,
                       child: Text(
                         name,
-                        style: TextStyle(
+                        style: const TextStyle(
                           color: Color.fromARGB(255, 51, 51, 51), //Txt
                           fontSize: 25,
                           fontWeight: FontWeight.bold,
@@ -93,7 +93,7 @@ class CoinCard extends StatelessWidget {
                     ),
                     Text(
                       symbol,
-                      style: TextStyle(
+                      style: const TextStyle(
                         color: Color.fromARGB(255, 51, 51, 51), //Txt
                         fontSize: 20,
                       ),
@@ -110,7 +110,7 @@ class CoinCard extends StatelessWidget {
                 children: [
                   Text(
                     '$sign'+price.toDouble().toString(),
-                    style: TextStyle(
+                    style: const TextStyle(
                       color: Color.fromARGB(255, 51, 51, 51), //Txt
                       fontSize: 20,
                       fontWeight: FontWeight.bold,
