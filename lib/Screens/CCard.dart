@@ -121,7 +121,7 @@ class CoinCard extends StatelessWidget {
                         ? change.toDouble().toString()
                         : '+' + change.toDouble().toString(),
                     style: TextStyle(
-                      color: change.toDouble() < 0 ? Colors.red : Colors.green,
+                      color: change.toDouble() < 0 ? Color.fromARGB(255, 231, 76, 60) : Color.fromARGB(255, 46, 204, 113),
                       fontSize: 14,
                       fontWeight: FontWeight.bold,
                     ),
