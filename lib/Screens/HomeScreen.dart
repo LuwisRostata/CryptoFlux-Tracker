@@ -14,10 +14,12 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  String selectedMarket = 'PHP';// Default market
+  String selectedMarket = 'PHP'; // Default market
   String icoin = '1';
-  String sign ='₱';
+  String sign = '₱';
   List<Coin> coinList = [];
+  List<Coin> originalCoinList = []; // Store original list
+  TextEditingController searchController = TextEditingController();
 
   Future<List<Coin>> fetchCoin() async {
     Uri url = Uri.parse(
@@ -39,6 +41,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
       setState(() {
         coinList = updatedCoinList;
+        originalCoinList = List.from(updatedCoinList); // Store original list
       });
 
       return coinList;
@@ -71,32 +74,67 @@ class _HomeScreenState extends State<HomeScreen> {
         centerTitle: true,
         leading: IconButton(
           icon: Image.asset(
-            'Assets/$icoin.png', // Adjust the path to your asset
-            width: 24, // Adjust the width as needed
+            'Assets/$icoin.png',
+            width: 24,
             height: 24,
-            // Adjust the height as needed
           ),
           onPressed: () {
             _showMarketOptions(context);
           },
         ),
       ),
-      body: ListView.builder(
-        scrollDirection: Axis.vertical,
-        itemCount: coinList.length,
-        itemBuilder: (context, index) {
-          return CoinCard(
-            name: coinList[index].name,
-            symbol: coinList[index].symbol,
-            imageUrl: coinList[index].imageUrl,
-            price: coinList[index].price.toDouble(),
-            change: coinList[index].change.toDouble(),
-            changePercentage: coinList[index].changePercentage.toDouble(),
-              sign: sign
-          );
-        },
+      body: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: TextField(
+              controller: searchController,
+              decoration: const InputDecoration(
+                hintText: 'Search by name...',
+                prefixIcon: Icon(Icons.search),
+              ),
+              onChanged: (query) {
+                updateSearchResults(query);
+              },
+            ),
+          ),
+          Expanded(
+            child: ListView.builder(
+              scrollDirection: Axis.vertical,
+              itemCount: coinList.length,
+              itemBuilder: (context, index) {
+                return CoinCard(
+                  name: coinList[index].name,
+                  symbol: coinList[index].symbol,
+                  imageUrl: coinList[index].imageUrl,
+                  price: coinList[index].price.toDouble(),
+                  change: coinList[index].change.toDouble(),
+                  changePercentage: coinList[index].changePercentage.toDouble(),
+                  sign: sign,
+                );
+              },
+            ),
+          ),
+        ],
       ),
     );
+  }
+
+  void updateSearchResults(String query) {
+    if (query.isEmpty) {
+      setState(() {
+        coinList = List.from(originalCoinList); // Reset to the original list
+      });
+    } else {
+      List<Coin> searchResults = coinList
+          .where((coin) =>
+          coin.name.toLowerCase().contains(query.toLowerCase()))
+          .toList();
+
+      setState(() {
+        coinList = searchResults;
+      });
+    }
   }
 
   void _showMarketOptions(BuildContext context) {
@@ -122,31 +160,26 @@ class _HomeScreenState extends State<HomeScreen> {
       }
     });
   }
-  void iconsign(){
-    if (selectedMarket=='PHP'){
-      icoin='1';
-      sign = '₱';
-    }
-    else if(selectedMarket=='USD'){
-      icoin='2';
-      sign = '\$';
-    }
-    else if(selectedMarket=='EUR'){
-      icoin='3';
-      sign = '€';
 
-    }
-    else if(selectedMarket=='JPY'){
-      icoin='4';
+  void iconsign() {
+    if (selectedMarket == 'PHP') {
+      icoin = '1';
+      sign = '₱';
+    } else if (selectedMarket == 'USD') {
+      icoin = '2';
+      sign = '\$';
+    } else if (selectedMarket == 'EUR') {
+      icoin = '3';
+      sign = '€';
+    } else if (selectedMarket == 'JPY') {
+      icoin = '4';
       sign = '¥';
-    }
-    else if(selectedMarket=='CNY'){
-      icoin='5';
+    } else if (selectedMarket == 'CNY') {
+      icoin = '5';
       sign = '¥';
-    }
-    else{
-      icoin='6';
+    } else {
+      icoin = '6';
       sign = '\$';
     }
-    }
+  }
 }
